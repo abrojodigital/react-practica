@@ -1,30 +1,27 @@
-import React from "react";
-import "./style.css";
+import React from "react"
+import { useEffect, useState } from "react"
+import "./style.css"
 
 export default function App() {
-  let msg = ""
-  const fx1 = async (nro) => {
-    try {
-      if(nro === 1){
-        return "Hecho el café"
-      }
-    } catch {
-      return "La cafetera no funciona"
-    }
-  }
+  const [posts, setPosts] = useState([]);
+
+    useEffect(() => {
+        fetch("https://www.reddit.com/r/reactjs.json")
+        .then(res => res.json())
+        .then(json =>
+        // Guarda posts en estado
+        setPosts(json.data.children.map(c => c.data))
+        )
+    }, [])
 
   return (
-    <div>
-      <Button
-        onClick = {
-          () => {
-            msg = await fx1(1)
-          }
-        } 
-      >
-        Veamos guat japens - {msg}
-      </Button>
-
+    <div className="App">
+      <ul>
+        {posts.map(post => (
+            <li key={post.id} > {post.title} </li>
+        ))}
+        </ul>
     </div>
   );
+
 }
